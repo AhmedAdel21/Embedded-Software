@@ -1,0 +1,4 @@
+"DIO.obj",
+"test1.obj" 
+TO "final2" 
+RAMSIZE(256) 

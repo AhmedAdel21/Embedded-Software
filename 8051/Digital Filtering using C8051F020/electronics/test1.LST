@@ -1,0 +1,157 @@
+C51 COMPILER V9.60.0.0   TEST1                                                             06/04/2020 15:32:24 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE TEST1
+OBJECT MODULE PLACED IN test1.OBJ
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE test1.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND TABS(2)
+
+line level    source
+
+   1          #include <c8051f020.h>
+   2          #include "std_macros.h"
+   3          #include "DIO.h"
+   4          
+   5          //#define Adc_Data    P0  //ADC
+   6          
+   7          
+   8          sbit ADDC=P2^2;
+   9          sbit ADDB=P2^1;
+  10          sbit ADDA=P2^0;
+  11          sbit ALE=P2^4;
+  12          sbit OE=P2^5;
+  13          sbit START=P2^6;
+  14          sbit EOC=P2^7;
+  15          sbit clk=P2^3; 
+  16          int ADC_value;
+  17          
+  18          int b ;
+  19          int i;
+  20          char sig1ON, sig2ON ;
+  21              float sig1 ,sig2;
+  22              float signal_1[3] = {0,0,0};
+  23              float signal_2[3] = {0,0,0};
+  24              float coeff_1[4]={0.349175349616205,
+  25                                0.229359258063891,
+  26                                0.229359258063891,
+  27                                0.349175349616205};
+  28              float coeff_2[4]={-0.641653637485822,
+  29                                0.649742213023953,
+  30                                0.649742213023953,
+  31                                0.641653637485822};
+  32          
+  33          
+  34          void read_adc() //Function to drive ADC
+  35          {
+  36   1        
+  37   1          ADC_value=0;
+  38   1          ALE=0;
+  39   1      
+  40   1          ALE=1;
+  41   1      
+  42   1          OE=1;
+  43   1          
+  44   1          ADC_value= DIO_read_port(0);
+  45   1        
+  46   1      
+  47   1        
+  48   1      }
+  49          
+  50          void adc() 
+  51          {
+  52   1      
+  53   1        
+  54   1        if( sig1ON !=1)
+  55   1        {
+C51 COMPILER V9.60.0.0   TEST1                                                             06/04/2020 15:32:24 PAGE 2   
+
+  56   2          ADDA=0; // Selecting input channel IN0 using address lines
+  57   2          read_adc();
+  58   2          DIO_write_port(1,ADC_value);
+  59   2      
+  60   2          ADDA=1; // Selecting input channel IN0 using address lines
+  61   2          read_adc();
+  62   2          DIO_write_port(3,ADC_value);
+  63   2          
+  64   2        
+  65   2        }
+  66   1        else
+  67   1        {
+  68   2          
+  69   2           ADDA=0; // Selecting input channel IN0 using address lines
+  70   2          read_adc();
+  71   2          DIO_write_port(1,ADC_value);
+  72   2          signal_1[i] = ADC_value;
+  73   2        
+  74   2          ADDA=1; // Selecting input channel IN0 using address lines
+  75   2          read_adc();
+  76   2          DIO_write_port(3,ADC_value);
+  77   2          signal_2[i] = ADC_value;
+  78   2          i++;
+  79   2          if (i ==4)
+  80   2          {
+  81   3            for( b =0 ; b <4 ; b++)
+  82   3              {
+  83   4                sig1 += signal_1[3-b] * coeff_1[b];
+  84   4                sig2 += signal_2[3-b] * coeff_2[b];
+  85   4              }
+  86   3              DIO_write_port(1,sig1);
+  87   3              DIO_write_port(3,sig2);
+  88   3              sig1 = 0;
+  89   3              sig2 = 0;
+  90   3            }
+  91   2        }
+  92   1        
+  93   1        
+  94   1      }
+  95          
+  96          
+  97          
+  98          
+  99          void main()
+ 100          {
+ 101   1          WDTCN = 0xDE;
+ 102   1          WDTCN = 0xAD;
+ 103   1          DIO_setPortInput(0);
+ 104   1          DIO_setPort_OutPutMode(1,1);
+ 105   1          DIO_setPin_OutPutMode(2,0, 1);
+ 106   1        DIO_setPin_OutPutMode(2,1, 1);
+ 107   1        DIO_setPin_OutPutMode(2,2, 1);
+ 108   1        DIO_setPin_OutPutMode(2,4, 1);
+ 109   1        DIO_setPin_OutPutMode(2, 5, 1);
+ 110   1        DIO_setPinInput(2,6,0);
+ 111   1        
+ 112   1          DIO_setPort_OutPutMode(3,1);
+ 113   1        
+ 114   1          ADDA=0; // Selecting input channel IN0 using address lines
+ 115   1          ADDB=0;
+ 116   1          ADDC=0;
+ 117   1          OE=1;
+C51 COMPILER V9.60.0.0   TEST1                                                             06/04/2020 15:32:24 PAGE 3   
+
+ 118   1      
+ 119   1          while(1)
+ 120   1          {
+ 121   2              //sig1ON = DIO_pinRead(2,6);
+ 122   2              adc();
+ 123   2            
+ 124   2            if (i==4)
+ 125   2              i=0;
+ 126   2          
+ 127   2          }
+ 128   1          
+ 129   1      }
+ 130           
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    456    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     72    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

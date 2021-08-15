@@ -1,0 +1,19 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Project:</h2>
+C:\Users\Mostafa Elt7awy\Desktop\electronics\final.uvproj
+Project File Date:  05/13/2020
+
+<h2>Output:</h2>
+Build target 'Target 1'
+compiling DIO.c...
+DIO.C(242): warning C206: 'DIO_setPort_OutPutMode': missing function-prototype
+DIO.C(242): error C267: 'DIO_setPort_OutPutMode': requires ANSI-style prototype
+Target not created
+Build target 'Target 1'
+compiling DIO.c...
+DIO.C(242): warning C206: 'DIO_setPort_OutPutMode': missing function-prototype
+DIO.C(242): error C267: 'DIO_setPort_OutPutMode': requires ANSI-style prototype
+Target not created
